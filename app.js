@@ -1,11 +1,11 @@
+import Shape from "./Shape.js";
+
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
-
 canvas.width = window.innerWidth - 30;
 canvas.height = window.innerHeight - 30;
 
 canvas.style.border = "solid red 5px";
-
 const canvasWidth = canvas.width;
 const canvasHeight = canvas.height;
 
@@ -22,29 +22,22 @@ const randomColor = () => Math.floor(Math.random() * 16777215).toString(16);
 const addShapes = () => {
   //we need to charge the random shapes to the array
   for (let i = 0; i < 5; i++) {
-    randomX = randomNum(canvasWidth);
-    randomY = randomNum(canvasHeight);
-    randomWidth = randomNum(canvasWidth / 2);
-    randomHeight = randomNum(canvasHeight / 2);
-    color = randomColor();
-    shapes.push({
-      x: randomX,
-      y: randomY,
-      width: randomWidth,
-      height: randomHeight,
-      color: color,
-    });
+    let x = randomNum(canvasWidth);
+    let y = randomNum(canvasHeight);
+    let width = randomNum(canvasWidth / 2);
+    let height = randomNum(canvasHeight / 2);
+    let color = randomColor();
+    let newShape = new Shape(x, y, width, height, color, ctx);
+    shapes.push(newShape);
   }
+  drawShapes();
 };
-const draw = () => {
-  //now we need to draw thats shapes
+const drawShapes = () => {
   ctx.clearRect(0, 0, canvasWidth, canvasHeight);
   shapes.forEach((shape) => {
-    ctx.fillRect(shape.x, shape.y, shape.width, shape.height);
-    ctx.fillStyle = `#${shape.color}`;
+    shape.draw();
   });
 };
-
 const is_mouse_on_shape = (x, y, shape) => {
   //we take the area of all shapes and compare it's with the area where
   let shapeLeft = shape.x; // we did click
@@ -83,15 +76,13 @@ const mouse_move = function (event) {
     let mouseX = parseInt(event.clientX); //take the client X
     let mouseY = parseInt(event.clientY);
 
-    let actualX = mouseX - startX; //difference between where the mouse is right noiw and the start point
-    let actualY = mouseY - startY;
+    let dx = mouseX - startX; //difference between where the mouse is right noiw and the start point
+    let dy = mouseY - startY;
 
     let current_shape = shapes[current_shape_index];
-    current_shape.x += actualX; //change the position adding the difference
-    current_shape.y += actualY;
-
-    draw(); //draw
-
+    current_shape.x += dx;
+    current_shape.y += dy;
+    current_shape.draw();
     startX = mouseX;
     startY = mouseY;
   }
@@ -110,4 +101,3 @@ canvas.onmouseup = mouse_up;
 canvas.onmousedown = mouse_down;
 canvas.onmousemove = mouse_move;
 addShapes();
-draw();
