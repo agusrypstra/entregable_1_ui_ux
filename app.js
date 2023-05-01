@@ -80,9 +80,8 @@ const mouse_move = function (event) {
     let dy = mouseY - startY;
 
     let current_shape = shapes[current_shape_index];
-    current_shape.x += dx;
-    current_shape.y += dy;
-    current_shape.draw();
+    current_shape.move(dx, dy);
+    drawShapes();
     startX = mouseX;
     startY = mouseY;
   }
